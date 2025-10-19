@@ -1,6 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 10
 
 int	str_append_mem(char **s1, char *s2, size_t size2)
 {
@@ -23,7 +28,7 @@ int	str_append_str(char **s1, char *s2)
 
 char	*get_next_line(int fd)
 {
-	static char b[BUFFER_size] = "";
+	static char b[BUFFER_SIZE] = "";
 	char	*ret = NULL;
 	char	*tmp = strchr(b ,'\n');
 
@@ -44,3 +49,17 @@ char	*get_next_line(int fd)
 	return ret;
 }
 
+int	main(void)
+{
+	int fd;
+	char *line;
+
+	fd = open("file.txt", O_RDONLY);
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line);
+	}
+	close(fd);
+	return (0);
+}
